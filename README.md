@@ -32,14 +32,17 @@ $view->addExtension(new Knlv\Slim\Views\TwigMessages(
 ```
 
 - In templates use `flash()` or `flash('some_key')` to fetch messages from Flash service
+- Conditionally display flash messages using has_message('some_key')
 
 ``` html
 ...
-<ul class="alert alert-danger">
-    {% for msg in flash('error') %}
-    <li>{{ msg }}</li>
-    {% endfor %}
-</ul>
+{% if has_message('error') %}
+    <ul class="alert alert-danger">
+        {% for msg in flash('error') %}
+        <li>{{ msg }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 ...
 ```
 
