@@ -49,6 +49,7 @@ class TwigMessages extends Twig_Extension
     {
         return [
             new Twig_SimpleFunction('flash', [$this, 'getMessages']),
+            new Twig_SimpleFunction('has_message', [$this, 'hasMessage']),
         ];
     }
 
@@ -67,5 +68,17 @@ class TwigMessages extends Twig_Extension
         }
 
         return $this->flash->getMessages();
+    }
+
+    /**
+     * Checks for the existence of flash messages for a specific key
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function hasMessage($key)
+    {
+        return $this->flash->hasMessage($key);
     }
 }

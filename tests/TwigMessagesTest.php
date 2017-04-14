@@ -35,7 +35,8 @@ class TwigMessagesTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods(array(
               'getMessages',
-              'getMessage'
+              'getMessage',
+              'hasMessage',
             ))
             ->getMock();
         $this->flash->expects($this->any())
@@ -45,6 +46,11 @@ class TwigMessagesTest extends \PHPUnit_Framework_TestCase
             ->method('getMessage')
             ->will($this->returnCallback(function ($key) {
                 return isset($this->dummyMessages[$key]) ? $this->dummyMessages[$key] : null;
+            }));
+        $this->flash->expects($this->any())
+            ->method('hasMessage')
+            ->will($this->returnCallback(function ($key) {
+                return isset($this->dummyMessages[$key]);
             }));
 
         $this->extension = new TwigMessages($this->flash);
@@ -70,6 +76,20 @@ key1: another message
 key2: only one message
 
 EOF;
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testKeyDoesNotHaveMessages()
+    {
+        $result = $this->view->render('non-existent-key.twig');
+        $expected = ''; 
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testKeyDoesHaveMessages()
+    {
+        $result = $this->view->render('existent-key.twig');
+        $expected = 'This should display'; 
         $this->assertEquals($expected, $result);
     }
 }
